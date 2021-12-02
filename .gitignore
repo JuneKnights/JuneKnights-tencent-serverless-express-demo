@@ -1,4 +1,9 @@
+.idea
 .DS_Store
+node_modules
+package-lock.json
+yarn.lock
+dist
 
 # Images
 images/avatars/
@@ -17,3 +22,12 @@ sized/
 thumbs/
 _thumbs/
 */expressionengine/cache/*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
