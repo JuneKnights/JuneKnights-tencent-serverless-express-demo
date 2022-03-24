@@ -4,6 +4,7 @@ const fs = require('fs');
 const app = express();
 
 app.get(`/`, (req, res) => {
+  alert(__dirname)
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
