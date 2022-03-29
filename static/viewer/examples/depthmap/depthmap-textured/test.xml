@@ -1,0 +1,93 @@
+<krpano>
+	
+	<include url="%VIEWER%/plugins/contextmenu.xml" />
+	<include url="%VIEWER%/plugins/webvr.xml" />
+	<include url="%VIEWER%/plugins/depthmap_navigation.xml" />
+	<include url="%VIEWER%/plugins/iphone_fullscreen_swipe.xml" />
+		
+	<display depthbuffer="true" />
+	
+	
+	<scene name="test_uv_tex_model_obj" autoload="true">
+		<preview url="texture_preview.jpg" />
+		<image>
+			<sphere url="texture.jpg" />
+			<depthmap url="tourmodel.obj" rendermode="3dmodel" scale="100" textured="true" waitforload="true" />
+		</image>
+		<!-- change the scene by pressing SPACE: -->
+		<events onkeyup="if(keycode == 32, loadscene(test_uv_tex_model_pano,null,MERGE|KEEPMOVING|KEEPSCENES, BLEND(1)));" />
+	</scene>
+		
+		
+	<scene name="test_uv_tex_model_pano">
+		<preview url="pano/pano_preview.jpg" />
+		<image>
+			<cube url="pano/tiles/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+			<depthmap url="tourmodel.obj" rendermode="3dmodel" scale="100" textured="false" waitforload="true" />
+		</image>
+		<!-- change the scene by pressing SPACE: -->
+		<events onkeyup="if(keycode == 32, loadscene(test_uv_tex_model_obj,null,MERGE|KEEPMOVING|KEEPSCENES, BLEND(1)));" />
+	</scene>
+	
+	
+	<events ondoubleclick="delayedcall(1,set(keycode,32);events.onkeyup(););" />
+	
+	
+	<style name="info" type="text" css="color:#FFFFFF;text-align:center;" bg="false" txtshadow="0 1 4 0x000000 1.0" enabled="false" />
+	<style name="button" type="text" css="text-align:center;" padding="4 8" mergedalpha="false" bgborder="0 0xFFFFFF 1" bgroundedge="1" bgshadow="0 1 4 0x000000 1.0" ondown="set(bgcolor, 0xDDDDDD);" onup="set(bgcolor, 0xFFFFFF);" />
+	
+	<layer name="exampleinfo" style="info" keep="true" html="data:exampleinfo" align="center" y="-25%" enabled="true" onclick="set(visible,false);" />
+	<layer name="sourceinfo" style="info" keep="true" html="data:sourceinfo" align="righttop" css="color:#FFFFFF;text-align:right;" enabled="true" />
+	
+	<data name="exampleinfo">
+		krpano Textured 3D-Model Test<br/>
+		Generated with <a href="https://der-mische.de/panocamadder/" target="_blank" style="color:#FFFFFF;">PanoCamAdder</a><br/>
+		<br/>
+		<i>Experimental !!!<br/>Syntax and usage will change!</i><br/>
+	</data>
+	
+	<data name="sourceinfo">
+		Thanks to <a href="https://der-mische.de/" target="_blank" style="color:#FFFFFF;">Michael Adam</a><br/>for the example data.
+	</data>
+	
+	<layer name="dollhouse" style="button" keep="true" html="Dollhouse"  width="80" align="bottom" y="50" onclick="dollhouse_view();" />
+	<layer name="resetview" style="button" keep="true" html="Reset View" width="80" align="bottom" y="20" onclick="resetview();" />
+	
+	<layer name="texmodel" style="button" keep="true" html="Textured"   width="100" align="bottom" y="20" x="-120" onclick="loadscene(test_uv_tex_model_obj,null,MERGE|KEEPMOVING|KEEPSCENES, BLEND(1));" />
+	<layer name="depthmap" style="button" keep="true" html="Depthmapped" width="100" align="bottom" y="20" x="+120" onclick="loadscene(test_uv_tex_model_pano,null,MERGE|KEEPMOVING|KEEPSCENES, BLEND(1));" />
+		
+	<action name="dollhouse_view">
+		lookto(270,50,90,default,true,true);
+		tween(view.oz|view.tx|view.ty|view.tz,calc(''+1200+'|'+image.ox+'|'+image.oy+'|'+image.oz));
+		set(control.invert,true);
+	</action>
+
+	<action name="dollhouse_off">
+		tween(view.oz, 0.0, 2.0);
+		set(control.invert,false);
+	</action>
+
+	<action name="resetview">
+		set(control.invert,false);
+		tween(view.tx|view.ty|view.tz|view.ox|view.oy|view.oz|view.fisheye,
+			calc(''+image.ox+'|'+image.oy+'|'+image.oz+'|0|0|0|0'),
+			0.5,
+			default
+		);
+	</action>
+	
+	<!-- adjust the UI layout from the depthmap_navigation.xml -->
+	<events name="walkinfo_touch" keep="true" devices="mobile"
+		onresize="if(stagewidth GT stageheight,
+					set(layer[walkinfo_touch], align=rightbottom, x=80, y=40);
+					set(layer[moveup], x=20, y=50);
+					set(layer[movedn], x=20, y=20);
+				  ,
+					set(layer[walkinfo_touch], align=bottom, x=0, y=85);
+					set(layer[moveup], x=20, y=90);
+					set(layer[movedn], x=20, y=60);
+				);
+				" 
+		/>
+
+</krpano>
